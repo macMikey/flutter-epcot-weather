@@ -38,6 +38,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
     var lon = -81.549395;
     http.Response? res;
 
+    debugPrint('Fetching weather data...');
+
     try {
       res = await http.get(Uri.parse(
           "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,snowfall,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York&forecast_days=1"));
@@ -76,9 +78,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
       return _waitingIndicator();
     } else if (_errorMessage != null) {
       return Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: WeatherAppBar(),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: WeatherAppBar(onRefresh: getCurrentWeather),
         ),
         body: Center(child: Text(_errorMessage!)),
       );
@@ -93,9 +95,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   // the main screen: app bar and body
   Scaffold _buildScaffold(Map<String, dynamic>? weatherData) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: WeatherAppBar(onRefresh: getCurrentWeather),
       ),
       body: AppBody(weatherData: weatherData),
     );
@@ -104,12 +106,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   // circular waiting indicator
   Widget _waitingIndicator() {
-    return const Scaffold(
+    return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: WeatherAppBar(onRefresh: getCurrentWeather),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
