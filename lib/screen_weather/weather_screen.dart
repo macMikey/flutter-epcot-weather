@@ -7,8 +7,8 @@
 // ----------------------------------------------
 
 import 'dart:convert';
-import 'package:weather/app_body.dart';
-import 'package:weather/app_bar.dart';
+import 'package:weather/screen_weather/app_body.dart';
+import 'package:weather/screen_weather/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 // ----------------------------------------------
@@ -38,8 +38,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     var lon = -81.549395;
     http.Response? res;
 
-    debugPrint('Fetching weather data...');
-
     try {
       res = await http.get(Uri.parse(
           "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,snowfall,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York&forecast_days=1"));
@@ -48,7 +46,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
       final statusCode = res.statusCode;
 
       if (statusCode != 200) {
-        throw ('Error $statusCode, ${data['reason']}');
+        setState(() {
+          _errorMessage = 'Error $statusCode, ${data['reason']}';
+          _isLoading = false;
+        });
+        return;
       }
 
       setState(() {

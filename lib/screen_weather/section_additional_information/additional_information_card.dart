@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/additional_information/additional_info_item.dart';
+import 'package:weather/screen_weather/section_additional_information/additional_info_item.dart';
 
 class AdditionalInfoCard extends StatelessWidget {
   const AdditionalInfoCard({super.key, required this.weatherData});

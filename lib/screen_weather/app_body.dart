@@ -4,9 +4,9 @@
      AdditionalInfoCard()
 */
 import 'package:flutter/material.dart';
-import 'package:weather/additional_information/additional_information_card.dart';
-import 'package:weather/current_conditions.dart';
-import 'package:weather/hourly_forecast/hourly_forecast.dart';
+import 'package:weather/screen_weather/section_additional_information/additional_information_card.dart';
+import 'package:weather/screen_weather/section_current_conditions/current_conditions.dart';
+import 'package:weather/screen_weather/section_hourly_forecast/hourly_forecast.dart';
 // ----------------------------------------------
 
 class AppBody extends StatelessWidget {

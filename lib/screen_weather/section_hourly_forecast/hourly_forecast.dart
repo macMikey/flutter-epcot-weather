@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/hourly_forecast/hourly_forecast_item.dart';
+import 'package:weather/screen_weather/section_hourly_forecast/hourly_forecast_item.dart';
 
 class HourlyForecast extends StatelessWidget {
   const HourlyForecast({

@@ -9,31 +9,23 @@ class CurrentConditions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint('------------------------------------');
-    //<daily stats (sunrise/sunset)>
+    //<daily stats>
     final dailyStats = weatherData['daily'];
-    //debugPrint('dailyStats: $dailyStats');
-    //debugPrint('dailyStats["sunrise"][0]: ${dailyStats['sunrise'][0]}');
     final sunrise = dailyStats['sunrise'][0];
     DateTime sunriseTime = DateTime.parse(sunrise);
-    //debugPrint('sunrise: $sunrise');
     final sunset = dailyStats['sunset'][0];
     DateTime sunsetTime = DateTime.parse(sunset);
-    //debugPrint('sunset: $sunset');
-    //</daily stats (sunrise/sunset)>
+    //</daily stats>
 
     final currentConditions = weatherData['current'];
     final time = currentConditions['time'];
     final DateTime currentTime = DateTime.parse(time);
-
     final temperature = currentConditions['temperature_2m'] ?? 'N/A';
-    //debugPrint('temperature: $temperature');
-    final weatherCode = currentConditions['weather_code'];
-    //debugPrint('weatherCode: $weatherCode');
-    final condition = _condition(weatherCode);
-    //debugPrint('condition: $condition');
+    final weatherCode = currentConditions['weather_code']; // integer
+    final condition = _condition(weatherCode); // need this before figure out which icon to display
 
     final daylight = (currentTime.isAfter(sunriseTime) && currentTime.isBefore(sunsetTime));
+
     final icon = _getWeatherIcon(condition, daylight);
 
     // Parse the timestamp and format it
@@ -52,7 +44,7 @@ class CurrentConditions extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Column(
               children: [
-                Text(formattedTime, style: const TextStyle(fontSize: 20)),
+                Text('As of: $formattedTime', style: const TextStyle(fontSize: 20)),
                 const SizedBox(height: 5),
                 Text('$temperature°F', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 5),
