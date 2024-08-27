@@ -14,13 +14,14 @@ class HourlyForecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int nextHourlyIndex = _nextHourlyTimeIndex(weatherData);
+    final String currentTimeString = weatherData['current']['time'] ?? '';
+    final int nextHourlyIndex = _nextHourlyTimeIndex(currentTimeString);
     final List<dynamic> hourlyData = weatherData['hourly']['time'];
     final List<dynamic> hourlyWeatherCodes = weatherData['hourly']['weather_code'];
     final List<dynamic> hourlyTemperatures = weatherData['hourly']['temperature_2m'];
 
     // Filter hourly data to include only the remaining hours of the day
-    final DateTime currentTime = DateTime.parse(weatherData['current']['time']);
+    final sunriseTime = DateTime.parse(weatherData['daily']['sunrise'][0]);
     final sunsetTime = DateTime.parse(weatherData['daily']['sunset'][0]);
     final numHoursRemaining = hourlyData.length - nextHourlyIndex;
 
@@ -29,17 +30,17 @@ class HourlyForecast extends StatelessWidget {
       child: Row(
         children: List.generate(numHoursRemaining, (index) {
           var currentIndex = nextHourlyIndex + index;
-          final String hour = hourlyData[currentIndex];
+          final DateTime hour = DateTime.parse(hourlyData[currentIndex]);
           final int weatherCode = hourlyWeatherCodes[currentIndex];
           final double temperature = hourlyTemperatures[currentIndex];
 
           final String condition = DataEngine.condition(weatherCode);
-          final bool daylight = currentTime.isBefore(sunsetTime);
+          final bool daylight = hour.isAfter(sunriseTime) && hour.isBefore(sunsetTime);
           final IconData icon = DataEngine.getWeatherIcon(condition, daylight);
 
           // Format time to HH:MM AM/PM
-          final DateTime hourTime = DateTime.parse(hour);
-          final String formattedHour = DateFormat('hh:mm a').format(hourTime);
+          //final DateTime hourTime = DateTime.parse(hour);
+          final String formattedHour = DateFormat('hh:mm a').format(hour);
 
           // Round temperature to whole number
           final String roundedTemperature = temperature.round().toString();
@@ -55,8 +56,7 @@ class HourlyForecast extends StatelessWidget {
   }
 // --------------------------------------------------------------
 
-  int _nextHourlyTimeIndex(Map<String, dynamic> weatherData) {
-    final String currentTimeString = weatherData['current']['time'];
+  int _nextHourlyTimeIndex(String currentTimeString) {
     final DateTime currentTime = DateTime.parse(currentTimeString);
     final List<String> hourlyTimes = List<String>.from(weatherData['hourly']['time']);
 
