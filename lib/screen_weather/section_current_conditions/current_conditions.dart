@@ -96,7 +96,10 @@ class CurrentConditions extends StatelessWidget {
       case 85:
       case 86:
         return 'Snow';
-
+      case 95:
+      case 96:
+      case 99:
+        return 'Thunderstorm';
       default:
         return 'Unknown';
     }
@@ -129,6 +132,8 @@ class CurrentConditions extends StatelessWidget {
         return Icons.ac_unit;
       case 'fog':
         return Icons.cloud_queue;
+      case 'thunderstorm':
+        return Icons.flash_on;
       default:
         return Icons.help_outline;
     }
