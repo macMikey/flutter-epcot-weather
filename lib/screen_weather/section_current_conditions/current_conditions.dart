@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/data_engine.dart'; // Import DataEngine
 
 class CurrentConditions extends StatelessWidget {
   final Map<String, dynamic> weatherData;
@@ -22,11 +23,11 @@ class CurrentConditions extends StatelessWidget {
     final DateTime currentTime = DateTime.parse(time);
     final temperature = currentConditions['temperature_2m'] ?? 'N/A';
     final weatherCode = currentConditions['weather_code']; // integer
-    final condition = _condition(weatherCode); // need this before figure out which icon to display
+    final condition = DataEngine.condition(weatherCode); // Use DataEngine method
 
     final daylight = (currentTime.isAfter(sunriseTime) && currentTime.isBefore(sunsetTime));
 
-    final icon = _getWeatherIcon(condition, daylight);
+    final icon = DataEngine.getWeatherIcon(condition, daylight); // Use DataEngine method
 
     // Parse the timestamp and format it
     final String formattedTime = DateFormat('hh:mm a').format(currentTime);
@@ -57,85 +58,5 @@ class CurrentConditions extends StatelessWidget {
         ),
       ),
     );
-  }
-// ----------------------------------------------
-
-  String _condition(int weatherCode) {
-    /* WMO Weather interpretation codes (WW)
-    https://open-meteo.com/en/docs
-    */
-    switch (weatherCode) {
-      case 0:
-        return 'Clear';
-      case 1:
-        return 'Mostly Clear';
-      case 2:
-        return 'Partly Cloudy';
-      case 3:
-        return 'Overcast';
-      case 45:
-      case 48:
-        return 'Fog';
-      case 51:
-      case 61:
-      case 53:
-      case 63:
-      case 55:
-      case 65:
-      case 80:
-      case 81:
-      case 82:
-        return 'Rain';
-      case 56:
-      case 57:
-        return 'Freezing Rain';
-      case 71:
-      case 73:
-      case 75:
-      case 77:
-      case 85:
-      case 86:
-        return 'Snow';
-      case 95:
-      case 96:
-      case 99:
-        return 'Thunderstorm';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  IconData _getWeatherIcon(String condition, bool daylight) {
-    switch (condition.toLowerCase()) {
-      case 'cloudy':
-        if (!daylight) {
-          return Icons.nights_stay;
-        } else {
-          return Icons.cloud;
-        }
-      case 'mostly cloudy':
-      case 'overcast':
-        return Icons.cloud;
-      case 'partly cloudy':
-        return Icons.wb_cloudy;
-      case 'clear':
-      case 'mostly clear':
-        if (daylight) {
-          return Icons.wb_sunny;
-        } else {
-          return Icons.bedtime;
-        }
-      case 'rain':
-        return Icons.beach_access;
-      case 'snow':
-      case 'freezing rain':
-        return Icons.ac_unit;
-      case 'fog':
-        return Icons.cloud_queue;
-      case 'thunderstorm':
-        return Icons.flash_on;
-      default:
-        return Icons.help_outline;
-    }
   }
 }
