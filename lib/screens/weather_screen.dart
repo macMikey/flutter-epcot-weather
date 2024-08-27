@@ -6,13 +6,12 @@
 */
 // ----------------------------------------------
 
-import 'dart:convert';
-import 'package:weather/screen_weather/app_body.dart';
-import 'package:weather/screen_weather/app_bar.dart';
+import 'package:weather/components/app_body.dart';
+import 'package:weather/widgets/weather_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:weather/theme_notifier.dart'; // Import the ThemeNotifier class
+import 'package:weather/providers/theme_notifier.dart'; // Import the ThemeNotifier class
+import 'package:weather/services/get_current_weather.dart'; // Import the GetCurrentWeather class
 // ----------------------------------------------
 
 class WeatherScreen extends StatefulWidget {
@@ -38,22 +37,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future<void> getCurrentWeather() async {
     var lat = 28.376824;
     var lon = -81.549395;
-    http.Response? res;
 
     try {
-      res = await http.get(Uri.parse(
-          "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,snowfall,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York&forecast_days=1"));
-
-      final data = jsonDecode(res.body);
-      final statusCode = res.statusCode;
-
-      if (statusCode != 200) {
-        setState(() {
-          _errorMessage = 'Error $statusCode, ${data['reason']}';
-          _isLoading = false;
-        });
-        return;
-      }
+      final data = await GetCurrentWeather.getCurrentWeather(lat, lon);
 
       setState(() {
         _weatherData = data;
@@ -65,13 +51,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
         _isLoading = false;
       });
     }
-    /*
-    //<debugx> // for barfing res contents after fetching
-    var jsonResponse = jsonDecode(res.body);
-    var prettyString = const JsonEncoder.withIndent('  ').convert(jsonResponse);
-    debugPrint(prettyString);
-    //</debugx>
-    */
   }
 
 // ----------------------------------------------

@@ -3,8 +3,8 @@
 */
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'theme_notifier.dart'; // Import the ThemeNotifier class
-import 'package:weather/screen_weather/weather_screen.dart';
+import 'providers/theme_notifier.dart'; // Import the ThemeNotifier class
+import 'package:weather/screens/weather_screen.dart';
 // --------------------------------------------------------------
 
 void main() {
