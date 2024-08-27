@@ -36,7 +36,7 @@ class HourlyForecast extends StatelessWidget {
           final int temperature = hourlyTemperatures[currentIndex].round();
 
           final String condition = DataEngine.condition(weatherCode);
-          final bool daylight = hour.isAfter(sunriseTime) && hour.isBefore(sunsetTime);
+          final bool daylight = dateTimeGTEQ(hour, sunriseTime) && dateTimeLTEQ(hour, sunsetTime);
           final IconData icon = DataEngine.getWeatherIcon(condition, daylight);
 
           // Format time to HH:MM AM/PM
@@ -54,10 +54,10 @@ class HourlyForecast extends StatelessWidget {
           // Check if sunrise or sunset should be displayed before the next hour
           if (currentIndex + 1 < hourlyData.length) {
             final DateTime nextHour = DateTime.parse(hourlyData[currentIndex + 1]);
-            if (sunriseTime.isAfter(hour) && sunriseTime.isBefore(nextHour)) {
+            if (dateTimeGTEQ(sunriseTime, hour) && dateTimeLTEQ(sunriseTime, nextHour)) {
               widgets.add(_buildSunriseSunsetBox('Sunrise'));
             }
-            if (sunsetTime.isAfter(hour) && sunsetTime.isBefore(nextHour)) {
+            if (dateTimeGTEQ(sunsetTime, hour) && dateTimeLTEQ(sunsetTime, nextHour)) {
               widgets.add(_buildSunriseSunsetBox('Sunset'));
             }
           }
@@ -78,7 +78,7 @@ class HourlyForecast extends StatelessWidget {
     int index = -1;
     for (int i = 0; i < hourlyTimes.length; i++) {
       final DateTime hourlyTime = DateTime.parse(hourlyTimes[i]);
-      if (hourlyTime.isBefore(currentTime)) {
+      if (dateTimeLTEQ(hourlyTime, currentTime)) {
         index = i;
       } else {
         break;
@@ -86,6 +86,16 @@ class HourlyForecast extends StatelessWidget {
     }
 
     return index;
+  }
+  // --------------------------------------------------------------
+
+  bool dateTimeLTEQ(DateTime a, DateTime b) {
+    return a.isBefore(b) || a.isAtSameMomentAs(b);
+  }
+  // --------------------------------------------------------------
+
+  bool dateTimeGTEQ(DateTime a, DateTime b) {
+    return a.isAfter(b) || a.isAtSameMomentAs(b);
   }
 // --------------------------------------------------------------
 
