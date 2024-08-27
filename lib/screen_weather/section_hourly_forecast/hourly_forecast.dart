@@ -82,13 +82,10 @@ class HourlyForecast extends StatelessWidget {
 
   Widget _buildSunriseSunsetBox(String label) {
     return Container(
-      width: 50, // Adjust the width as needed
-      height: 50, // Adjust the height to make it more compact
-      child: Center(
-        child: RotatedBox(
-          quarterTurns: 3,
-          child: Text(label),
-        ),
+      width: 20, // Adjust the width as needed
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: label.split('').map((char) => Text(char)).toList(),
       ),
     );
   }
