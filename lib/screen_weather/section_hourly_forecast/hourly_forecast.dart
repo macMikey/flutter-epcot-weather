@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather/screen_weather/section_hourly_forecast/hourly_forecast_item.dart';
 import 'package:weather/data_engine.dart';
-import 'package:intl/intl.dart'; // Add this import for date formatting
+import 'package:intl/intl.dart';
 // ==============================================================
 
 class HourlyForecast extends StatelessWidget {
@@ -21,21 +21,20 @@ class HourlyForecast extends StatelessWidget {
 
     // Filter hourly data to include only the remaining hours of the day
     final DateTime currentTime = DateTime.parse(weatherData['current']['time']);
-    final List<dynamic> remainingHours = hourlyData.where((hour) {
-      final DateTime hourTime = DateTime.parse(hour);
-      return hourTime.day == currentTime.day && hourTime.isAfter(currentTime);
-    }).toList();
+    final sunsetTime = DateTime.parse(weatherData['daily']['sunset'][0]);
+    final numHoursRemaining = hourlyData.length - nextHourlyIndex;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(remainingHours.length, (index) {
-          final String hour = remainingHours[index];
-          final int weatherCode = hourlyWeatherCodes[nextHourlyIndex + index];
-          final double temperature = hourlyTemperatures[nextHourlyIndex + index];
+        children: List.generate(numHoursRemaining, (index) {
+          var currentIndex = nextHourlyIndex + index;
+          final String hour = hourlyData[currentIndex];
+          final int weatherCode = hourlyWeatherCodes[currentIndex];
+          final double temperature = hourlyTemperatures[currentIndex];
 
           final String condition = DataEngine.condition(weatherCode);
-          final bool daylight = currentTime.isBefore(DateTime.parse(weatherData['daily']['sunset'][0]));
+          final bool daylight = currentTime.isBefore(sunsetTime);
           final IconData icon = DataEngine.getWeatherIcon(condition, daylight);
 
           // Format time to HH:MM AM/PM
