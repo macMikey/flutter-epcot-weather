@@ -1,12 +1,9 @@
-// title bar + reload button
-// no dynamic data
 import 'package:flutter/material.dart';
-// ----------------------------------------------
 
 class WeatherAppBar extends StatelessWidget {
   static const appTitle = "EPCOT Weather";
   final VoidCallback onRefresh;
-  final Function(BuildContext) onToggleTheme; // Updated to accept BuildContext
+  final Function(BuildContext) onToggleTheme;
   final ThemeMode themeMode;
 
   const WeatherAppBar({
@@ -15,15 +12,15 @@ class WeatherAppBar extends StatelessWidget {
     required this.onToggleTheme,
     required this.themeMode,
   });
-// ----------------------------------------------
 
   @override
   Widget build(BuildContext context) {
+    // Determine the icon based on the current and system theme
     IconData themeIcon;
-    if (themeMode == ThemeMode.dark) {
-      themeIcon = Icons.dark_mode;
-    } else if (themeMode == ThemeMode.light) {
-      themeIcon = Icons.light_mode;
+    final Brightness systemBrightness = MediaQuery.of(context).platformBrightness;
+
+    if (themeMode == ThemeMode.system) {
+      themeIcon = systemBrightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode;
     } else {
       themeIcon = Icons.brightness_auto;
     }
@@ -33,7 +30,7 @@ class WeatherAppBar extends StatelessWidget {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(themeIcon),
-        onPressed: () => onToggleTheme(context), // Pass the context
+        onPressed: () => onToggleTheme(context),
       ),
       actions: [
         IconButton(
@@ -43,5 +40,4 @@ class WeatherAppBar extends StatelessWidget {
       ],
     );
   }
-  // ----------------------------------------------
 }

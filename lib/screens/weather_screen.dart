@@ -1,18 +1,10 @@
-/* Main screen.
-    * polls server
-    * displays:
-      * App_bar()
-      * AppBody()
-*/
-// ----------------------------------------------
-
+import 'dart:convert';
 import 'package:weather/components/app_body.dart';
 import 'package:weather/widgets/weather_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:weather/providers/theme_notifier.dart'; // Import the ThemeNotifier class
-import 'package:weather/services/get_current_weather.dart'; // Import the GetCurrentWeather class
-// ----------------------------------------------
+import 'package:weather/providers/theme_notifier.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -20,7 +12,6 @@ class WeatherScreen extends StatefulWidget {
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
 }
-// ----------------------------------------------
 
 class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? _weatherData;
@@ -32,14 +23,26 @@ class _WeatherScreenState extends State<WeatherScreen> {
     super.initState();
     getCurrentWeather();
   }
-// ----------------------------------------------
 
   Future<void> getCurrentWeather() async {
     var lat = 28.376824;
     var lon = -81.549395;
+    http.Response? res;
 
     try {
-      final data = await GetCurrentWeather.getCurrentWeather(lat, lon);
+      res = await http.get(Uri.parse(
+          "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,snowfall,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York&forecast_days=1"));
+
+      final data = jsonDecode(res.body);
+      final statusCode = res.statusCode;
+
+      if (statusCode != 200) {
+        setState(() {
+          _errorMessage = 'Error $statusCode, ${data['reason']}';
+          _isLoading = false;
+        });
+        return;
+      }
 
       setState(() {
         _weatherData = data;
@@ -53,8 +56,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
   }
 
-// ----------------------------------------------
-
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
@@ -67,7 +68,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: WeatherAppBar(
             onRefresh: getCurrentWeather,
-            onToggleTheme: _toggleTheme,
+            onToggleTheme: (context) => _toggleTheme(context),
             themeMode: themeNotifier.themeMode,
           ),
         ),
@@ -77,34 +78,28 @@ class _WeatherScreenState extends State<WeatherScreen> {
       return _buildScaffold(_weatherData, themeNotifier.themeMode);
     }
   }
-// ----------------------------------------------
-// ----------------------------------------------
-// ----------------------------------------------
 
-  // the main screen: app bar and body
   Scaffold _buildScaffold(Map<String, dynamic>? weatherData, ThemeMode themeMode) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: WeatherAppBar(
           onRefresh: getCurrentWeather,
-          onToggleTheme: _toggleTheme,
+          onToggleTheme: (context) => _toggleTheme(context),
           themeMode: themeMode,
         ),
       ),
       body: AppBody(weatherData: weatherData),
     );
   }
-// ----------------------------------------------
 
-  // circular waiting indicator
   Widget _waitingIndicator(ThemeMode themeMode) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: WeatherAppBar(
           onRefresh: getCurrentWeather,
-          onToggleTheme: _toggleTheme,
+          onToggleTheme: (context) => _toggleTheme(context),
           themeMode: themeMode,
         ),
       ),
@@ -120,11 +115,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
-// ----------------------------------------------
 
-  // Implementation of _toggleTheme using Provider
   void _toggleTheme(BuildContext context) {
-    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme(context);
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+    themeNotifier.toggleTheme(context);
   }
-} // _WeatherScreenState
-//</debugx>
+}
