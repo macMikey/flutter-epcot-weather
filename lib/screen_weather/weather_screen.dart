@@ -11,6 +11,8 @@ import 'package:weather/screen_weather/app_body.dart';
 import 'package:weather/screen_weather/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:weather/theme_notifier.dart'; // Import the ThemeNotifier class
 // ----------------------------------------------
 
 class WeatherScreen extends StatefulWidget {
@@ -76,18 +78,24 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     if (_isLoading) {
-      return _waitingIndicator();
+      return _waitingIndicator(themeNotifier.themeMode);
     } else if (_errorMessage != null) {
       return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: WeatherAppBar(onRefresh: getCurrentWeather),
+          child: WeatherAppBar(
+            onRefresh: getCurrentWeather,
+            onToggleTheme: _toggleTheme,
+            themeMode: themeNotifier.themeMode,
+          ),
         ),
         body: Center(child: Text(_errorMessage!)),
       );
     } else {
-      return _buildScaffold(_weatherData);
+      return _buildScaffold(_weatherData, themeNotifier.themeMode);
     }
   }
 // ----------------------------------------------
@@ -95,11 +103,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
 // ----------------------------------------------
 
   // the main screen: app bar and body
-  Scaffold _buildScaffold(Map<String, dynamic>? weatherData) {
+  Scaffold _buildScaffold(Map<String, dynamic>? weatherData, ThemeMode themeMode) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(onRefresh: getCurrentWeather),
+        child: WeatherAppBar(
+          onRefresh: getCurrentWeather,
+          onToggleTheme: _toggleTheme,
+          themeMode: themeMode,
+        ),
       ),
       body: AppBody(weatherData: weatherData),
     );
@@ -107,11 +119,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
 // ----------------------------------------------
 
   // circular waiting indicator
-  Widget _waitingIndicator() {
+  Widget _waitingIndicator(ThemeMode themeMode) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(onRefresh: getCurrentWeather),
+        child: WeatherAppBar(
+          onRefresh: getCurrentWeather,
+          onToggleTheme: _toggleTheme,
+          themeMode: themeMode,
+        ),
       ),
       body: const Center(
         child: Column(
@@ -126,5 +142,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 // ----------------------------------------------
+
+  // Implementation of _toggleTheme using Provider
+  void _toggleTheme() {
+    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme();
+  }
 } // _WeatherScreenState
 //</debugx>

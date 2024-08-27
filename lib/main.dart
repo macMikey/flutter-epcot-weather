@@ -2,23 +2,34 @@
    * sets theme
 */
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'theme_notifier.dart'; // Import the ThemeNotifier class
 import 'package:weather/screen_weather/weather_screen.dart';
-// ----------------------------------------------
+// --------------------------------------------------------------
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: MyApp(),
+    ),
+  );
 }
-// ----------------------------------------------
+// --------------------------------------------------------------
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const WeatherScreen(),
-      theme: ThemeData.dark(useMaterial3: true),
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, child) {
+        return MaterialApp(
+          themeMode: themeNotifier.themeMode,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          home: WeatherScreen(),
+        );
+      },
     );
   }
+  // --------------------------------------------------------------
 }
