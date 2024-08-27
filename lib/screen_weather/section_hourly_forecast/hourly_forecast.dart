@@ -44,7 +44,7 @@ class HourlyForecast extends StatelessWidget {
 
           List<Widget> widgets = [];
 
-          // Add the current hour's widget
+          // Add the current hour's widget(s) - if sunrise or sunset happens, add that after current hour's forecast
           widgets.add(HourlyForecastItem(
             hour: formattedHour,
             icon: icon,
@@ -90,6 +90,7 @@ class HourlyForecast extends StatelessWidget {
 // --------------------------------------------------------------
 
   Widget _buildSunriseSunsetBox(String label) {
+    // builds box with vertical text
     return SizedBox(
       width: 20, // Adjust the width as needed
       child: Column(
