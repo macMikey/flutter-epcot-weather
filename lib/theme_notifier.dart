@@ -5,13 +5,14 @@ class ThemeNotifier with ChangeNotifier {
 
   ThemeMode get themeMode => _themeMode;
 
-  void toggleTheme() {
-    if (_themeMode == ThemeMode.light) {
-      _themeMode = ThemeMode.dark;
-    } else if (_themeMode == ThemeMode.dark) {
-      _themeMode = ThemeMode.system;
+  void toggleTheme(BuildContext context) {
+    if (_themeMode == ThemeMode.system) {
+      // Toggle to the opposite of the system theme
+      final brightness = View.of(context).platformDispatcher.platformBrightness;
+      _themeMode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
     } else {
-      _themeMode = ThemeMode.light;
+      // Toggle back to system theme
+      _themeMode = ThemeMode.system;
     }
     notifyListeners();
   }

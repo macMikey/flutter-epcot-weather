@@ -1,12 +1,12 @@
 // title bar + reload button
-// no dynmaic data
+// no dynamic data
 import 'package:flutter/material.dart';
 // ----------------------------------------------
 
 class WeatherAppBar extends StatelessWidget {
   static const appTitle = "EPCOT Weather";
   final VoidCallback onRefresh;
-  final VoidCallback onToggleTheme;
+  final Function(BuildContext) onToggleTheme; // Updated to accept BuildContext
   final ThemeMode themeMode;
 
   const WeatherAppBar({
@@ -33,7 +33,7 @@ class WeatherAppBar extends StatelessWidget {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(themeIcon),
-        onPressed: onToggleTheme,
+        onPressed: () => onToggleTheme(context), // Pass the context
       ),
       actions: [
         IconButton(

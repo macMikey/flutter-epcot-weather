@@ -144,8 +144,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
 // ----------------------------------------------
 
   // Implementation of _toggleTheme using Provider
-  void _toggleTheme() {
-    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme();
+  void _toggleTheme(BuildContext context) {
+    Provider.of<ThemeNotifier>(context, listen: false).toggleTheme(context);
   }
 } // _WeatherScreenState
 //</debugx>
