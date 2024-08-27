@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weather/screen_weather/section_hourly_forecast/hourly_forecast_item.dart';
 import 'package:weather/data_engine.dart';
 import 'package:intl/intl.dart';
-// ==============================================================
 
 class HourlyForecast extends StatelessWidget {
   final Map<String, dynamic> weatherData;
@@ -39,22 +38,35 @@ class HourlyForecast extends StatelessWidget {
           final IconData icon = DataEngine.getWeatherIcon(condition, daylight);
 
           // Format time to HH:MM AM/PM
-          //final DateTime hourTime = DateTime.parse(hour);
           final String formattedHour = DateFormat('hh:mm a').format(hour);
 
-          // Round temperature to whole number
-          final String roundedTemperature = temperature.round().toString();
+          List<Widget> widgets = [];
 
-          return HourlyForecastItem(
+          // Add the current hour's widget
+          widgets.add(HourlyForecastItem(
             hour: formattedHour,
             icon: icon,
-            temperature: '$roundedTemperature°F',
+            temperature: '$temperature°F',
+          ));
+
+          // Check if sunrise or sunset should be displayed before the next hour
+          if (currentIndex + 1 < hourlyData.length) {
+            final DateTime nextHour = DateTime.parse(hourlyData[currentIndex + 1]);
+            if (sunriseTime.isAfter(hour) && sunriseTime.isBefore(nextHour)) {
+              widgets.add(_buildSunriseSunsetBox('Sunrise'));
+            }
+            if (sunsetTime.isAfter(hour) && sunsetTime.isBefore(nextHour)) {
+              widgets.add(_buildSunriseSunsetBox('Sunset'));
+            }
+          }
+
+          return Row(
+            children: widgets,
           );
         }),
       ),
     );
   }
-// --------------------------------------------------------------
 
   int _nextHourlyTimeIndex(String currentTimeString) {
     final DateTime currentTime = DateTime.parse(currentTimeString);
@@ -67,5 +79,17 @@ class HourlyForecast extends StatelessWidget {
 
     return index;
   }
-  // --------------------------------------------------------------
+
+  Widget _buildSunriseSunsetBox(String label) {
+    return Container(
+      width: 50, // Adjust the width as needed
+      height: 50, // Adjust the height to make it more compact
+      child: Center(
+        child: RotatedBox(
+          quarterTurns: 3,
+          child: Text(label),
+        ),
+      ),
+    );
+  }
 }
