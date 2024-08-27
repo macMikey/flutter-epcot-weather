@@ -33,7 +33,7 @@ class HourlyForecast extends StatelessWidget {
           var currentIndex = thisHourlyIndex + index;
           final DateTime hour = DateTime.parse(hourlyData[currentIndex]);
           final int weatherCode = hourlyWeatherCodes[currentIndex];
-          final double temperature = hourlyTemperatures[currentIndex];
+          final int temperature = hourlyTemperatures[currentIndex].round();
 
           final String condition = DataEngine.condition(weatherCode);
           final bool daylight = hour.isAfter(sunriseTime) && hour.isBefore(sunsetTime);
