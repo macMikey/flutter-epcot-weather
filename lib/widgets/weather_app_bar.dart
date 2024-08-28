@@ -22,7 +22,8 @@ class WeatherAppBar extends StatelessWidget {
     if (themeMode == ThemeMode.system) {
       themeIcon = systemBrightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode;
     } else {
-      themeIcon = Icons.brightness_auto;
+      themeIcon = systemBrightness == Brightness.dark ? Icons.dark_mode : Icons.light_mode;
+      //themeIcon = Icons.brightness_auto; // if we instead want to show the system theme icon
     }
 
     return AppBar(
