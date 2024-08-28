@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+// ==============================================================
 
 class WeatherAppBar extends StatelessWidget {
   static const appTitle = "EPCOT Weather";
   final VoidCallback onRefresh;
   final Function(BuildContext) onToggleTheme;
   final ThemeMode themeMode;
+// --------------------------------------------------------------
 
   const WeatherAppBar({
     super.key,
@@ -12,6 +14,7 @@ class WeatherAppBar extends StatelessWidget {
     required this.onToggleTheme,
     required this.themeMode,
   });
+// --------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -41,4 +44,5 @@ class WeatherAppBar extends StatelessWidget {
       ],
     );
   }
+  // ===========================================================
 }

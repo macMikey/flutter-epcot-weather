@@ -1,16 +1,13 @@
 /*
-fnctions:
+functions:
   - condition(int weatherCode) => String
   - getWeatherIcon(String condition, bool daylight) => IconData
-  - getCurrentWeather(double lat, double lon) => Future<Map<String, dynamic>>
 */
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 // ==============================================================
 
-class GetCurrentWeather {
+class WeatherProperties {
   static String condition(int weatherCode) {
     /* WMO Weather interpretation codes (WW)
     https://open-meteo.com/en/docs
@@ -91,15 +88,4 @@ class GetCurrentWeather {
     }
   }
 // --------------------------------------------------------------
-
-  static Future<Map<String, dynamic>> getCurrentWeather(double lat, double lon) async {
-    final response = await http.get(Uri.parse(
-        "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,relative_humidity_2m,precipitation,rain,showers,snowfall,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FNew_York&forecast_days=1"));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load weather data');
-    }
-  }
 }

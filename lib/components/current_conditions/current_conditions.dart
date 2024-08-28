@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/services/get_current_weather.dart'; // Import DataEngine
+import 'package:weather/services/weather_properties.dart'; // Import DataEngine
 
 class CurrentConditions extends StatelessWidget {
   final Map<String, dynamic> weatherData;
@@ -23,11 +23,11 @@ class CurrentConditions extends StatelessWidget {
     final DateTime currentTime = DateTime.parse(time);
     final temperature = currentConditions['temperature_2m'] ?? 'N/A';
     final weatherCode = currentConditions['weather_code']; // integer
-    final condition = GetCurrentWeather.condition(weatherCode); // Use GetCurrentWeather method
+    final condition = WeatherProperties.condition(weatherCode);
 
     final daylight = (currentTime.isAfter(sunriseTime) && currentTime.isBefore(sunsetTime));
 
-    final icon = GetCurrentWeather.getWeatherIcon(condition, daylight); // Use GetCurrentWeather method
+    final icon = WeatherProperties.getWeatherIcon(condition, daylight);
 
     // Parse the timestamp and format it
     final String formattedTime = DateFormat('hh:mm a').format(currentTime);

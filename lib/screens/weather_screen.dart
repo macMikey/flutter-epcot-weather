@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'package:weather/components/app_body.dart';
-import 'package:weather/widgets/weather_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:weather/components/app_body.dart';
+import 'package:weather/widgets/weather_app_bar.dart';
 import 'package:weather/providers/theme_notifier.dart';
+// ==============================================================
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -12,6 +13,7 @@ class WeatherScreen extends StatefulWidget {
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
 }
+// ==============================================================
 
 class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? _weatherData;
@@ -23,6 +25,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     super.initState();
     getCurrentWeather();
   }
+// --------------------------------------------------------------
 
   Future<void> getCurrentWeather() async {
     var lat = 28.376824;
@@ -55,6 +58,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       });
     }
   }
+// --------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -78,31 +82,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
       return _buildScaffold(_weatherData, themeNotifier.themeMode);
     }
   }
+// --------------------------------------------------------------
 
   Scaffold _buildScaffold(Map<String, dynamic>? weatherData, ThemeMode themeMode) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(
-          onRefresh: getCurrentWeather,
-          onToggleTheme: (context) => _toggleTheme(context),
-          themeMode: themeMode,
-        ),
-      ),
+      appBar: _appBar(themeMode),
       body: AppBody(weatherData: weatherData),
     );
   }
+// --------------------------------------------------------------
 
   Widget _waitingIndicator(ThemeMode themeMode) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: WeatherAppBar(
-          onRefresh: getCurrentWeather,
-          onToggleTheme: (context) => _toggleTheme(context),
-          themeMode: themeMode,
-        ),
-      ),
+      appBar: _appBar(themeMode),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,9 +107,24 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
+// --------------------------------------------------------------
+
+  PreferredSize _appBar(ThemeMode themeMode) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: WeatherAppBar(
+        onRefresh: getCurrentWeather,
+        onToggleTheme: (context) => _toggleTheme(context),
+        themeMode: themeMode,
+      ),
+    );
+  }
+// --------------------------------------------------------------
 
   void _toggleTheme(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     themeNotifier.toggleTheme(context);
   }
+  // --------------------------------------------------------------
 }
+// ==============================================================

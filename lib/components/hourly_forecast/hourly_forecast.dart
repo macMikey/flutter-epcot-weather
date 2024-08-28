@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/components/hourly_forecast/hourly_forecast_item.dart';
-import 'package:weather/services/get_current_weather.dart';
+import 'package:weather/services/weather_properties.dart';
 import 'package:intl/intl.dart';
 // ==============================================================
 
@@ -35,9 +35,9 @@ class HourlyForecast extends StatelessWidget {
           final int weatherCode = hourlyWeatherCodes[currentIndex];
           final int temperature = hourlyTemperatures[currentIndex].round();
 
-          final String condition = GetCurrentWeather.condition(weatherCode);
+          final String condition = WeatherProperties.condition(weatherCode);
           final bool daylight = dateTimeGTEQ(hour, sunriseTime) && dateTimeLTEQ(hour, sunsetTime);
-          final IconData icon = GetCurrentWeather.getWeatherIcon(condition, daylight);
+          final IconData icon = WeatherProperties.getWeatherIcon(condition, daylight);
 
           // Format time to HH:MM AM/PM
           final String formattedHour = DateFormat('hh:mm a').format(hour);
