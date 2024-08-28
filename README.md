@@ -1,16 +1,18 @@
-# weather
+# EPCOT weather
 
-A new Flutter project.
+my second flutter project, the first one i put my back into.
 
-## Getting Started
+* significant co-writing performed by github copilot
+* used material design asthetic and controls
+* uses system theme for light/dark
+* displays current weather at EPCOT (note that the service i'm using updates every 15 minutes)
+* button to switch theme
+* button to reload (again, server updates data every 15 minutes. app does not auto-refetch)
+* hourly forecast ribbon/horizontal scroller for the remainder of the day, including sunrise/sunset markers, if relevant
+* switches day/night icons
+* displays additional information for current conditions (wind, humidity, pressure)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p float="left">
+  <img src="https://github.com/macMikey/flutter-epcot-weather/blob/main/screenshots/darkmode.png" />
+  <img src="https://github.com/macMikey/flutter-epcot-weather/blob/main/screenshots/lightmode.png" />
+</p>
