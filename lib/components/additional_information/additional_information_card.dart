@@ -11,7 +11,9 @@ class AdditionalInfoCard extends StatelessWidget {
     final currentConditions = weatherData?['current'];
     final windSpeed = currentConditions?['wind_speed_10m'] ?? 'N/A';
     final humidity = currentConditions?['relative_humidity_2m'] ?? 'N/A';
-    final surfacePressure = (currentConditions?['surface_pressure'] * 0.02953) ?? 'N/A';
+    final surfacePressure = currentConditions?['surface_pressure'] != null
+        ? (currentConditions['surface_pressure'] * 0.02953).toStringAsFixed(2)
+        : 'N/A';
 
     return SizedBox(
       child: Row(

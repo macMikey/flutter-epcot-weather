@@ -21,6 +21,12 @@ Dark | Light
 
 ## Version History
 
+### 1.0.2 +6
+
+* round pressure
+
+
+
 ### 1.0.1+5
 
 * convert pressure to inHg
