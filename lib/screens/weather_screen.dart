@@ -6,7 +6,6 @@ import 'package:epcot_weather/components/app_body.dart';
 import 'package:epcot_weather/widgets/weather_app_bar.dart';
 import 'package:epcot_weather/providers/theme_notifier.dart';
 import 'package:package_info_plus/package_info_plus.dart'; // Import the package
-// ==============================================================
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -14,7 +13,6 @@ class WeatherScreen extends StatefulWidget {
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
 }
-// ==============================================================
 
 class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? _weatherData;
@@ -29,7 +27,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     getCurrentWeather();
     _fetchVersionInfo(); // Fetch version info
   }
-// --------------------------------------------------------------
 
   Future<void> _fetchVersionInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -37,7 +34,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       _versionInfo = '${packageInfo.version}+${packageInfo.buildNumber}';
     });
   }
-// --------------------------------------------------------------
 
   Future<void> getCurrentWeather() async {
     setState(() {
@@ -54,6 +50,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
       final data = jsonDecode(res.body);
       final statusCode = res.statusCode;
+
+      // Debug print the data retrieved from the server
+      final formattedData = const JsonEncoder.withIndent('  ').convert(data);
+      debugPrint('Weather Data Retrieved:\n$formattedData');
 
       if (statusCode != 200) {
         setState(() {
@@ -77,7 +77,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       });
     }
   }
-// --------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +102,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       return _buildScaffold(_weatherData, themeNotifier.themeMode);
     }
   }
-// --------------------------------------------------------------
 
   Scaffold _buildScaffold(Map<String, dynamic>? weatherData, ThemeMode themeMode) {
     return Scaffold(
@@ -118,7 +116,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       bottomNavigationBar: _versionInfoWidget(), // Add version info widget
     );
   }
-// --------------------------------------------------------------
 
   Widget _waitingIndicator(ThemeMode themeMode) {
     return Scaffold(
@@ -136,7 +133,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       bottomNavigationBar: _versionInfoWidget(), // Add version info widget
     );
   }
-// --------------------------------------------------------------
 
   PreferredSize _appBar(ThemeMode themeMode) {
     return PreferredSize(
@@ -149,13 +145,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
-// --------------------------------------------------------------
 
   void _toggleTheme(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     themeNotifier.toggleTheme(context);
   }
-// --------------------------------------------------------------
 
   Widget _versionInfoWidget() {
     return Padding(

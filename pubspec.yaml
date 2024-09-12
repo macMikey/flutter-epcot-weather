@@ -2,7 +2,7 @@ name: epcot_weather
 title: EPCOT Weather
 description: "Beginner-ish level flutter project cowritten by github copilot."
 
-version: 1.0.3+8
+version: 1.0.4+9
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 

@@ -21,6 +21,12 @@ Dark | Light
 
 ## Version History
 
+### 1.0.4+9
+
+* added update available indicator, and display next update time
+
+
+
 ### 1.0.3+8
 
 * refresh indicator more prominent
