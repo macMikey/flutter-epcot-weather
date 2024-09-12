@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:weather/components/app_body.dart';
 import 'package:weather/widgets/weather_app_bar.dart';
 import 'package:weather/providers/theme_notifier.dart';
+import 'package:package_info_plus/package_info_plus.dart'; // Import the package
 // ==============================================================
 
 class WeatherScreen extends StatefulWidget {
@@ -19,11 +20,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? _weatherData;
   bool _isLoading = true;
   String? _errorMessage;
+  String? _versionInfo; // Variable to hold version info
 
   @override
   void initState() {
     super.initState();
     getCurrentWeather();
+    _fetchVersionInfo(); // Fetch version info
+  }
+// --------------------------------------------------------------
+
+  Future<void> _fetchVersionInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _versionInfo = '${packageInfo.version}+${packageInfo.buildNumber}';
+    });
   }
 // --------------------------------------------------------------
 
@@ -77,6 +88,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
         ),
         body: Center(child: Text(_errorMessage!)),
+        bottomNavigationBar: _versionInfoWidget(), // Add version info widget
       );
     } else {
       return _buildScaffold(_weatherData, themeNotifier.themeMode);
@@ -88,6 +100,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return Scaffold(
       appBar: _appBar(themeMode),
       body: AppBody(weatherData: weatherData),
+      bottomNavigationBar: _versionInfoWidget(), // Add version info widget
     );
   }
 // --------------------------------------------------------------
@@ -105,6 +118,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: _versionInfoWidget(), // Add version info widget
     );
   }
 // --------------------------------------------------------------
@@ -125,6 +139,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     themeNotifier.toggleTheme(context);
   }
-  // --------------------------------------------------------------
+// --------------------------------------------------------------
+
+  Widget _versionInfoWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        _versionInfo != null ? 'Version: $_versionInfo' : 'Loading version...',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
+      ),
+    );
+  }
 }
-// ==============================================================
