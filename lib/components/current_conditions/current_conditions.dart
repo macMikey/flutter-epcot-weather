@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/services/weather_properties.dart'; // Import DataEngine
+import 'package:epcot_weather/services/weather_properties.dart'; // Import DataEngine
 
 class CurrentConditions extends StatelessWidget {
   final Map<String, dynamic> weatherData;

@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_notifier.dart';
-import 'package:weather/screens/weather_screen.dart';
+import 'package:epcot_weather/screens/weather_screen.dart';
 // --------------------------------------------------------------
 
 void main() {

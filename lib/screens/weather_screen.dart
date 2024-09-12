@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:weather/components/app_body.dart';
-import 'package:weather/widgets/weather_app_bar.dart';
-import 'package:weather/providers/theme_notifier.dart';
+import 'package:epcot_weather/components/app_body.dart';
+import 'package:epcot_weather/widgets/weather_app_bar.dart';
+import 'package:epcot_weather/providers/theme_notifier.dart';
 import 'package:package_info_plus/package_info_plus.dart'; // Import the package
 // ==============================================================
 

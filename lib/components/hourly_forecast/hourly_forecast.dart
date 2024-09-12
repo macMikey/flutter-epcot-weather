@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather/components/hourly_forecast/hourly_forecast_item.dart';
-import 'package:weather/services/weather_properties.dart';
+import 'package:epcot_weather/components/hourly_forecast/hourly_forecast_item.dart';
+import 'package:epcot_weather/services/weather_properties.dart';
 import 'package:intl/intl.dart';
 // ==============================================================
 

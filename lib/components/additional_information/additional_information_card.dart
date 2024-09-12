@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather/components/additional_information/additional_info_item.dart';
+import 'package:epcot_weather/components/additional_information/additional_info_item.dart';
 
 class AdditionalInfoCard extends StatelessWidget {
   const AdditionalInfoCard({super.key, required this.weatherData});
@@ -11,7 +11,7 @@ class AdditionalInfoCard extends StatelessWidget {
     final currentConditions = weatherData?['current'];
     final windSpeed = currentConditions?['wind_speed_10m'] ?? 'N/A';
     final humidity = currentConditions?['relative_humidity_2m'] ?? 'N/A';
-    final surfacePressure = currentConditions?['surface_pressure'] ?? 'N/A';
+    final surfacePressure = (currentConditions?['surface_pressure'] * 0.02953) ?? 'N/A';
 
     return SizedBox(
       child: Row(
@@ -19,7 +19,7 @@ class AdditionalInfoCard extends StatelessWidget {
         children: [
           AdditionalInfoItem(icon: Icons.air, label: "Wind", value: "$windSpeed mph"),
           AdditionalInfoItem(icon: Icons.water_drop, label: "Humidity", value: "$humidity%"),
-          AdditionalInfoItem(icon: Icons.speed, label: "Pressure", value: "$surfacePressure hPa"),
+          AdditionalInfoItem(icon: Icons.speed, label: "Pressure", value: "$surfacePressure inHg"),
         ],
       ),
     );

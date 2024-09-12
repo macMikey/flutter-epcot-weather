@@ -5,7 +5,7 @@ beginnerish flutter project
 * significant co-writing performed by github copilot
 * used material design asthetic and controls
 * starts with system theme (light/dark)
-* connects to open-mateo weather service
+* connects to open-meteo weather service
 * displays current weather at EPCOT
 * button to switch theme (light/dark)
 * button to reload (server updates data every 15 minutes. app does not auto-refetch)
@@ -17,3 +17,18 @@ Dark | Light
 -- | --
 <img src="https://github.com/macMikey/flutter-epcot-weather/blob/main/screenshots/darkmode.png" /> | <img src="https://github.com/macMikey/flutter-epcot-weather/blob/main/screenshots/lightmode.png" />
 
+
+
+## Version History
+
+### 1.0.1+5
+
+* convert pressure to inHg
+* ios build works
+* minor other stuff
+
+
+
+### 1.0.0 09/11/24
+
+* first version that runs on a physical device
