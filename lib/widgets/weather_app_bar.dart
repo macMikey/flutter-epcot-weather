@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-// ==============================================================
 
-class WeatherAppBar extends StatelessWidget {
-  static const appTitle = "EPCOT Weather";
+class WeatherAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onRefresh;
   final Function(BuildContext) onToggleTheme;
   final ThemeMode themeMode;
-// --------------------------------------------------------------
+  final bool isRefreshing; // Add a parameter to track the refreshing state
 
   const WeatherAppBar({
     super.key,
     required this.onRefresh,
     required this.onToggleTheme,
     required this.themeMode,
+    required this.isRefreshing, // Initialize the parameter
   });
-// --------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +28,29 @@ class WeatherAppBar extends StatelessWidget {
     }
 
     return AppBar(
-      title: const Text(appTitle, style: TextStyle(fontWeight: FontWeight.bold)),
+      title: const Text("EPCOT Weather", style: TextStyle(fontWeight: FontWeight.bold)),
       centerTitle: true,
       leading: IconButton(
         icon: Icon(themeIcon),
         onPressed: () => onToggleTheme(context),
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: onRefresh,
-        ),
+        if (isRefreshing)
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          )
+        else
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: onRefresh,
+          ),
       ],
     );
   }
-  // ===========================================================
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

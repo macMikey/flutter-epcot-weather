@@ -19,6 +19,7 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   Map<String, dynamic>? _weatherData;
   bool _isLoading = true;
+  bool _isRefreshing = false; // Track the refreshing state
   String? _errorMessage;
   String? _versionInfo; // Variable to hold version info
 
@@ -39,6 +40,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
 // --------------------------------------------------------------
 
   Future<void> getCurrentWeather() async {
+    setState(() {
+      _isRefreshing = true; // Start refreshing
+    });
+
     var lat = 28.376824;
     var lon = -81.549395;
     http.Response? res;
@@ -54,6 +59,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         setState(() {
           _errorMessage = 'Error $statusCode, ${data['reason']}';
           _isLoading = false;
+          _isRefreshing = false; // Stop refreshing
         });
         return;
       }
@@ -61,11 +67,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
       setState(() {
         _weatherData = data;
         _isLoading = false;
+        _isRefreshing = false; // Stop refreshing
       });
     } catch (e) {
       setState(() {
         _errorMessage = "Failed to fetch weather data: $e";
         _isLoading = false;
+        _isRefreshing = false; // Stop refreshing
       });
     }
   }
@@ -85,6 +93,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             onRefresh: getCurrentWeather,
             onToggleTheme: (context) => _toggleTheme(context),
             themeMode: themeNotifier.themeMode,
+            isRefreshing: _isRefreshing, // Pass the refreshing state
           ),
         ),
         body: Center(child: Text(_errorMessage!)),
@@ -99,7 +108,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Scaffold _buildScaffold(Map<String, dynamic>? weatherData, ThemeMode themeMode) {
     return Scaffold(
       appBar: _appBar(themeMode),
-      body: AppBody(weatherData: weatherData),
+      body: RefreshIndicator(
+        onRefresh: getCurrentWeather,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: AppBody(weatherData: weatherData),
+        ),
+      ),
       bottomNavigationBar: _versionInfoWidget(), // Add version info widget
     );
   }
@@ -130,6 +145,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         onRefresh: getCurrentWeather,
         onToggleTheme: (context) => _toggleTheme(context),
         themeMode: themeMode,
+        isRefreshing: _isRefreshing, // Pass the refreshing state
       ),
     );
   }

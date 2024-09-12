@@ -21,6 +21,13 @@ Dark | Light
 
 ## Version History
 
+### 1.0.3+8
+
+* refresh indicator more prominent
+* pull-down-to-refresh 
+
+
+
 ### 1.0.2 +6
 
 * round pressure
