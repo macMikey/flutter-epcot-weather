@@ -21,7 +21,13 @@ Dark | Light
 
 ## Version History
 
-### 1.0.4+9
+### 1.0.5+11
+
+* added copyright, read from another yaml file
+
+  
+
+### 1.0.4+10
 
 * added update available indicator, and display next update time
 

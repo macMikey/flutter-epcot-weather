@@ -1,6 +1,3 @@
-/* * loads WeatherScreen()
-   * sets theme
-*/
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_notifier.dart';

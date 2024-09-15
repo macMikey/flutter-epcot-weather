@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:epcot_weather/components/app_body.dart';
 import 'package:epcot_weather/widgets/weather_app_bar.dart';
 import 'package:epcot_weather/providers/theme_notifier.dart';
-import 'package:package_info_plus/package_info_plus.dart'; // Import the package
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:yaml/yaml.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -19,13 +21,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
   bool _isLoading = true;
   bool _isRefreshing = false; // Track the refreshing state
   String? _errorMessage;
-  String? _versionInfo; // Variable to hold version info
+  String? _versionInfo;
+  String? copyright1;
+  String? copyright2;
 
   @override
   void initState() {
     super.initState();
     getCurrentWeather();
-    _fetchVersionInfo(); // Fetch version info
+    _loadConfig();
+    _fetchVersionInfo();
+  }
+
+  Future<void> _loadConfig() async {
+    try {
+      final configContent = await rootBundle.loadString('assets/config.yaml');
+      final configYaml = loadYaml(configContent);
+      setState(() {
+        if (configYaml != null && configYaml['copyright'] != null) {
+          copyright1 = configYaml['copyright']['line1'];
+          copyright2 = configYaml['copyright']['line2'];
+        } else {
+          debugPrint('Invalid config.yaml structure');
+        }
+      });
+    } catch (e) {
+      debugPrint('Error loading config.yaml: $e');
+    }
   }
 
   Future<void> _fetchVersionInfo() async {
@@ -96,7 +118,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
         ),
         body: Center(child: Text(_errorMessage!)),
-        bottomNavigationBar: _versionInfoWidget(), // Add version info widget
+        bottomNavigationBar: _footerWidget(), // Add version info widget
       );
     } else {
       return _buildScaffold(_weatherData, themeNotifier.themeMode);
@@ -113,7 +135,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           child: AppBody(weatherData: weatherData),
         ),
       ),
-      bottomNavigationBar: _versionInfoWidget(), // Add version info widget
+      bottomNavigationBar: _footerWidget(), // Add version info widget
     );
   }
 
@@ -130,7 +152,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _versionInfoWidget(), // Add version info widget
+      bottomNavigationBar: _footerWidget(), // Add version info widget
     );
   }
 
@@ -151,13 +173,31 @@ class _WeatherScreenState extends State<WeatherScreen> {
     themeNotifier.toggleTheme(context);
   }
 
-  Widget _versionInfoWidget() {
+  Widget _footerWidget() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text(
-        _versionInfo != null ? 'Version: $_versionInfo' : 'Loading version...',
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 12, color: Colors.grey),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // Ensure the footer takes minimal space
+        children: [
+          if (copyright1 != null)
+            Text(
+              copyright1!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          if (copyright2 != null)
+            Text(
+              copyright2!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          if (_versionInfo != null)
+            Text(
+              'Version: $_versionInfo',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+        ],
       ),
     );
   }

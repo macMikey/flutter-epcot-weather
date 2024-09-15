@@ -22,18 +22,30 @@ class CurrentConditionsState extends State<CurrentConditions> {
   @override
   void initState() {
     super.initState();
+    _updateTimes();
+    _startTimer();
+  }
+
+  @override
+  void didUpdateWidget(CurrentConditions oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.weatherData != oldWidget.weatherData) {
+      _updateTimes();
+    }
+  }
+
+  void _updateTimes() {
     _currentTime = DateTime.now();
     _forecastTime = DateTime.parse(widget.weatherData['current']['time']);
     _nextUpdateTime = _calculateNextUpdateTime(_forecastTime);
-    _isUpdateAvailable = DateTime.now().isAfter(_nextUpdateTime);
-    _startTimer();
+    _isUpdateAvailable = _currentTime.isAfter(_nextUpdateTime);
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       setState(() {
         _currentTime = DateTime.now();
-        _isUpdateAvailable = DateTime.now().isAfter(_nextUpdateTime);
+        _isUpdateAvailable = _currentTime.isAfter(_nextUpdateTime);
       });
     });
   }
