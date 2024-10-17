@@ -81,3 +81,4 @@ web/build/
 *.xcconfig
 *.pbxproj
 *.plist
+tree.txt
